@@ -3,14 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
         consumerProguardFiles 'consumer-rules.pro'
     }
@@ -22,11 +22,39 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            java.srcDirs = ['/src/main/kotlin', 'src/androidTest/kotlin/', 'src/test/kotlin/']
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
+        }
+    }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        dev {
+            dimension "default"
+        }
+
+        alpha {
+            dimension "default"
+        }
+
+        beta {
+            dimension "default"
+        }
+
+        stable {
+            dimension "default"
+        }
+    }
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    api rootProject.ext.kotlin
+    api rootProject.ext.appcompat
+    api rootProject.ext.constraintLayout
 }

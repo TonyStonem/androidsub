@@ -1,3 +1,5 @@
+include ':update'
+include ':download'
 rootProject.name='androidsub'
 include ':app'
 include ':base'

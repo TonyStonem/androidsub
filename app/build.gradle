@@ -3,15 +3,15 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.xjw.androidsub"
-        minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        applicationId rootProject.ext.applicationId
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
     }
 
     buildTypes {
@@ -21,21 +21,43 @@ android {
         }
     }
 
-    sourceSets{
-        main{
-            java {
-                srcDirs 'src/main/kotlin'
-            }
+    sourceSets {
+        main {
+            java.srcDirs = ['/src/main/kotlin', 'src/androidTest/kotlin/', 'src/test/kotlin/']
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/']
         }
     }
 
+    flavorDimensions "default"
+
+    productFlavors {
+        dev {
+            applicationId rootProject.ext.debugApplicationId
+            versionNameSuffix "-debug"
+            dimension "default"
+            manifestPlaceholders = [APP_ID: rootProject.ext.debugApplicationId]
+        }
+
+        alpha {
+            dimension "default"
+            manifestPlaceholders = [APP_ID: rootProject.ext.applicationId]
+        }
+
+        beta {
+            dimension "default"
+            manifestPlaceholders = [APP_ID: rootProject.ext.applicationId]
+        }
+
+        stable {
+            dimension "default"
+            manifestPlaceholders = [APP_ID: rootProject.ext.applicationId]
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation project(':base')
+    implementation project(':update')
 }
